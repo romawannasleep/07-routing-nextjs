@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Modal from '../../../../components/Modal/Modal';
 import { fetchNoteById } from '../../../../lib/api';
 import css from '../../../../app/notes/[id]/NoteDetails.module.css';
-import Loading from '@/app/notes/loading';
+import Loading from '@/app//loading';
 
 export default function NotePreview() {
   const params = useParams();
