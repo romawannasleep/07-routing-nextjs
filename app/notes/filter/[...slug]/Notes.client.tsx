@@ -1,6 +1,6 @@
 "use client";
 
-import React, {  useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { fetchNotes } from '../../../../lib/api';
 
@@ -12,28 +12,35 @@ import NoteForm from '../../../../components/NoteForm/NoteForm';
 import css from './page.module.css';
 
 type Props = {
-  category: string | undefined;
+  tag: string | undefined;
 };
 
-export default function NotesClient ({category}: Props) {
+// small debounce hook
+function useDebounce<T>(value: T, delay = 300) {
+  const [debounced, setDebounced] = React.useState(value);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debounced;
+}
+
+export default function NotesClient ({tag}: Props) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("")
+  const debouncedSearch = useDebounce(search, 300);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const perPage = 12;
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['notes', page, search, category],
-    queryFn: () => fetchNotes({ page, perPage, search, tag: category}),
+    queryKey: ['notes', page, debouncedSearch, tag],
+    queryFn: () => fetchNotes({ page, perPage, search: debouncedSearch, tag }),
     staleTime: 300,
     placeholderData: keepPreviousData,
   });
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearch(search);
-    }, 300);
 
-    return () => clearTimeout(timer);
-  }, [search]);
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Something went wrong</p>;

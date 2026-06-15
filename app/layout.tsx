@@ -33,9 +33,8 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <TanStackProvider>
         <Header />
-        {children}
-        <div id="modal-root" />
-        {modal}
+  {children}
+  {modal}
         <Footer />
         </TanStackProvider>
       </body>

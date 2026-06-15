@@ -59,9 +59,3 @@ export const fetchNote = async (id: string): Promise<Note> => {
 
 export const fetchNoteById = fetchNote;
 
-export const getNotes = async (categoryId?: string) => {
-  const res = await axios.get<Note>('/notes', {
-    params: { categoryId },
-  });
-  return res.data;
-};
